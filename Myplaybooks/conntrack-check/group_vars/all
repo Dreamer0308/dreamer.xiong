@@ -1,0 +1,9 @@
+sysctl_centos5:
+  net.ipv4.ip_conntrack_max : 655360
+  net.ipv4.netfilter.ip_conntrack_max : 655360
+
+# Define Sysctl param for CentOS 6
+sysctl_centos6:
+  net.nf_conntrack_max : 655360
+  net.netfilter.nf_conntrack_max : 655360
+

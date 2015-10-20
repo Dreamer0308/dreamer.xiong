@@ -1,0 +1,4 @@
+mongo1   ansible_ssh_host=52.74.16.30 ansible_ssh_port=22
+mongo144 ansible_ssh_host=52.74.132.214 ansible_ssh_port=22
+mongo143 ansible_ssh_host=52.76.89.108 ansible_ssh_port=22
+mongo61  ansible_ssh_host=52.74.131.4 ansible_ssh_port=22

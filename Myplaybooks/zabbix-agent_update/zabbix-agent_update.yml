@@ -1,0 +1,10 @@
+---
+- hosts: all 
+  gather_facts: yes
+  sudo: true
+  tasks:
+    # Playbook for updating zabbix-agent to the latest version
+    - include: tasks/agent_update.yml
+  handlers:
+    # Restart zabbix-agent after updating zabbix-agent.
+    - include: handlers/main.yml

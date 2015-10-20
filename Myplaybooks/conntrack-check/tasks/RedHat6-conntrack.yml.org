@@ -1,0 +1,30 @@
+---
+- name: Check conntrack_max for CentOS6
+  raw: cat /proc/sys/net/netfilter/nf_conntrack_max
+  register: conntrack_OS6
+  ignore_errors: True
+
+- name: Change conntrack_max for CentOS6 if the value less then 655000
+  raw: echo 655000 > /proc/sys/net/netfilter/nf_conntrack_max 
+  ignore_errors: True
+  register: OS6_result
+  when: 
+    conntrack_OS6.rc == 0 and conntrack_OS6.stdout|int < 655000
+
+- name: Ensure sysctl settings are properly applied (CentOS6)
+  sysctl:
+    name="net.nf_conntrack_max"
+    value=655000
+    state=present
+    reload=yes
+    sysctl_set=yes
+  ignore_errors: True
+  #when:
+    #conntrack_OS6.rc == 0 and conntrack_OS6.stdout|int < 655000
+
+- name: Check conntrack_max again
+  raw: cat /proc/sys/net/netfilter/nf_conntrack_max ; /sbin/sysctl -a |grep "net.nf_conntrack_max"
+  ignore_errors: True
+
+
+

@@ -1,0 +1,63 @@
+---
+
+- name: Ensure zabbix repository
+  template:
+    src=templates/zabbix.repo.j2
+    dest=/etc/yum.repos.d/zabbix.repo
+    owner=root
+    group=root
+    mode=0644
+
+#- name: Ensure cnc repository
+#  template:
+#    src=templates/cnc.repo.j2
+#    dest=/etc/yum.repos.d/cnc.repo
+#    owner=root
+#    group=root
+#    mode=0644
+- name: Ensure ZABBIX GPG key is known
+  rpm_key:
+    state=present
+    key=http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
+
+# Update zabbix-agent to 2.4 using the zabbix repo, 
+#   zabbix-sender, zabbix-get are needed to be updated as well.
+- name: Ensure zabbix-agent is the latest version
+  yum:
+    name="zabbix-agent"
+    state=latest
+    disablerepo=epel,cnc
+    enablerepo=zabbix
+  ignore_errors: True
+  notify:
+    - Restart zabbix-agent
+
+- name: Ensure zabbix is the latest version
+  yum:
+    name="zabbix"
+    state=latest
+    disablerepo=epel,cnc
+    enablerepo=zabbix
+  ignore_errors: True
+
+- name: Ensure zabbix-sender is the latest version
+  yum:
+    name="zabbix-sender"
+    state=latest
+    disablerepo=epel,cnc
+    enablerepo=zabbix
+  ignore_errors: True
+
+- name: Ensure zabbix-get is the latest version
+  yum:
+    name="zabbix-get"
+    state=latest
+    disablerepo=epel,cnc
+    enablerepo=zabbix
+  ignore_errors: True
+
+#- name: Ensure zabbix-agent is running
+#  service:
+#    name=zabbix-agent
+#    state=started
+

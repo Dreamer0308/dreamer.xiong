@@ -1,0 +1,30 @@
+---
+
+
+- name: Check conntrack_max for CentOS5
+  raw: cat /proc/sys/net/ipv4/ip_conntrack_max
+  register: conntrack_OS5
+  ignore_errors: True
+
+- name: Change conntrack_max for CentOS5 if the value less then 655000
+  raw: echo 655000 > /proc/sys/net/ipv4/ip_conntrack_max
+  ignore_errors: True
+  register: OS5_result
+  when: 
+    conntrack_OS5.rc == 0 and conntrack_OS5.stdout|int < 655000
+
+- name: Ensure sysctl settings are properly applied (CentOS5)
+  sysctl:
+    name="net.ipv4.ip_conntrack_max"
+    value=655000
+    state=present
+    reload=yes
+    sysctl_set=yes
+  ignore_errors: True
+  #when:
+    #conntrack_OS5.rc == 0 and conntrack_OS5.stdout|int < 655000
+
+- name: Check conntrack_max again
+  raw: cat /proc/sys/net/ipv4/ip_conntrack_max ; /sbin/sysctl -a |grep "net.ipv4.ip_conntrack_max"
+  ignore_errors: True
+
